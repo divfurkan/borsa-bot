@@ -10,12 +10,10 @@ TELEGRAM_BOT_TOKEN = os.getenv("TELEGRAM_BOT_TOKEN")
 TELEGRAM_CHAT_ID = os.getenv("TELEGRAM_CHAT_ID")
 
 hisseler = [
-    {"symbol": "AKBNK.IS", "target": 17.5},
-    {"symbol": "THYAO.IS", "target": 295},
-    {"symbol": "SISE.IS", "target": 57},
-    {"symbol": "ASELS.IS", "target": 67.2},
-    {"symbol": "KRDMD.IS", "target": 27.1}
+    {"symbol": "AKBNK.IS", "target": 1.0},  # Bu fiyatın üstünde olduğu için mesaj gitmeli
+    {"symbol": "THYAO.IS", "target": 1.0}
 ]
+
 
 def fiyat_getir(symbol):
     try:
