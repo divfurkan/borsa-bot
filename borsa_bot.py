@@ -52,11 +52,13 @@ def telegram_gonder(mesaj):
     }
     try:
         r = requests.post(url, data=payload)
-        print(f"Telegram API yanıtı: {r.status_code} - {r.text}")  # Yeni eklenen satır
-        if not r.ok:
-            logger.error(f"Telegram mesajı gönderilemedi: {r.text}")
+        if r.ok:
+            logger.info(f"Telegram mesajı gönderildi: {mesaj}")
+        else:
+            logger.error(f"Telegram mesajı gönderilemedi: {r.status_code} {r.text}")
     except Exception as e:
         logger.error(f"Telegram gönderim hatası: {e}")
+
 
 
 def takip_et():
