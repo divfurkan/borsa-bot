@@ -32,7 +32,6 @@ hisseler = [
     {"symbol": "THYAO.IS", "target": 0.01}
 ]
 
-
 def fiyat_getir(symbol):
     try:
         url = f"https://finnhub.io/api/v1/quote?symbol={symbol}&token={FINNHUB_API_KEY}"
@@ -59,9 +58,6 @@ def telegram_gonder(mesaj):
     except Exception as e:
         logger.error(f"Telegram gönderim hatası: {e}")
 
-
-
-
 def takip_et():
     logger.info("📡 Takip başlatıldı...")
     while True:
@@ -82,20 +78,11 @@ app = Flask(__name__)
 
 @app.route("/")
 def home():
-    # templates/index.html dosyasını döner
     return render_template("index.html")
 
-if __name__ == "__main__":
-    port = int(os.environ.get("PORT", 5000))
-    logger.info(f"Flask server {port} portunda başlatılıyor...")
-    app.run(host="0.0.0.0", port=port)
-
-
-# Flask ilk istekten önce botu başlat
-@app.before_first_request
-def baslangic():
-    logger.info("📡 Bot başlatılıyor...")
-    telegram_gonder("✅ Test mesajı: Sistem başarıyla başlatıldı.")
+# Gunicorn çalıştırdığında otomatik başlat
+if __name__ != "__main__":
+    logger.info("🔁 Gunicorn başlatıldı, bot çalıştırılıyor...")
+    telegram_gonder("✅ Bot yeniden başlatıldı ve çalışıyor.")
     thread = threading.Thread(target=takip_et, daemon=True)
     thread.start()
-
