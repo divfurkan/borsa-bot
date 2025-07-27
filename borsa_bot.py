@@ -3,6 +3,11 @@ import os
 import threading
 import time
 import requests
+import logging
+
+# Logger ayarları
+logging.basicConfig(level=logging.DEBUG, format='%(asctime)s %(levelname)s %(message)s')
+logger = logging.getLogger()
 
 # === API Anahtarları ===
 FINNHUB_API_KEY = os.getenv("FINNHUB_API_KEY")
@@ -21,10 +26,10 @@ def fiyat_getir(symbol):
         url = f"https://finnhub.io/api/v1/quote?symbol={symbol}&token={FINNHUB_API_KEY}"
         r = requests.get(url)
         data = r.json()
-        print(f"DEBUG - {symbol} verisi: {data}")
+        logger.debug(f"{symbol} verisi: {data}")
         return data.get('c')
     except Exception as e:
-        print(f"⚠️ {symbol} için veri alınamadı: {e}")
+        logger.warning(f"{symbol} için veri alınamadı: {e}")
         return None
 
 # === Telegram Bildirimi ===
@@ -37,32 +42,32 @@ def telegram_gonder(mesaj):
     try:
         r = requests.post(url, data=payload)
         if not r.ok:
-            print(f"❌ Telegram mesajı gönderilemedi: {r.text}")
+            logger.error(f"Telegram mesajı gönderilemedi: {r.text}")
     except Exception as e:
-        print(f"❌ Telegram gönderim hatası: {e}")
+        logger.error(f"Telegram gönderim hatası: {e}")
 
 # === Hisse Takibi ===
 def takip_et():
-    print("📡 Takip başlatıldı...")
+    logger.info("📡 Takip başlatıldı...")
     while True:
         for hisse in hisseler:
             fiyat = fiyat_getir(hisse["symbol"])
-            if fiyat:
-                print(f"{hisse['symbol']}: {fiyat} TL")
+            if fiyat is not None:
+                logger.info(f"{hisse['symbol']}: {fiyat} TL")
                 if fiyat >= hisse["target"]:
                     mesaj = f"📈 {hisse['symbol']} hedefe ulaştı!\nFiyat: {fiyat} TL, Hedef: {hisse['target']} TL"
                     telegram_gonder(mesaj)
                     hisse["target"] = float('inf')  # Tekrar bildirim göndermesin
             else:
-                print(f"⚠️ {hisse['symbol']} için fiyat alınamadı.")
-        time.sleep(5)
+                logger.warning(f"{hisse['symbol']} için fiyat alınamadı.")
+        time.sleep(5)  # 5 saniyede bir kontrol
 
 # === Flask Web Uygulaması ===
 app = Flask(__name__)
 
 @app.route("/")
 def home():
-    return render_template("index.html")  # templates/index.html olmalı
+    return render_template("index.html")  # templates/index.html dosyasını yükler
 
 # === Uygulama Başlatma ===
 if __name__ == "__main__":
