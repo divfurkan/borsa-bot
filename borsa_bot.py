@@ -28,9 +28,10 @@ if not TELEGRAM_CHAT_ID:
 
 # === Takip Edilecek Hisseler ===
 hisseler = [
-    {"symbol": "AKBNK.IS", "target": 1.0},
-    {"symbol": "THYAO.IS", "target": 1.0}
+    {"symbol": "AKBNK.IS", "target": 0.01},
+    {"symbol": "THYAO.IS", "target": 0.01}
 ]
+
 
 def fiyat_getir(symbol):
     try:
