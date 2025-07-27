@@ -21,6 +21,7 @@ def fiyat_getir(symbol):
         url = f"https://finnhub.io/api/v1/quote?symbol={symbol}&token={FINNHUB_API_KEY}"
         r = requests.get(url)
         data = r.json()
+        print(f"DEBUG - {symbol} verisi: {data}")
         return data.get('c')
     except Exception as e:
         print(f"⚠️ {symbol} için veri alınamadı: {e}")
