@@ -86,6 +86,9 @@ def home():
     return render_template("index.html")
 
 if __name__ == "__main__":
+    # Başlangıçta test mesajı gönder (önce!)
+    telegram_gonder("✅ Test mesajı: Sistem başarıyla başlatıldı.")
+
     # Bot takibini ayrı thread'de başlat
     thread = threading.Thread(target=takip_et, daemon=True)
     thread.start()
@@ -93,4 +96,4 @@ if __name__ == "__main__":
     port = int(os.environ.get("PORT", 5000))
     logger.info(f"Flask server {port} portunda başlatılıyor...")
     app.run(host="0.0.0.0", port=port)
-    telegram_gonder("Test mesajı: Sistem çalışıyor.")
+
